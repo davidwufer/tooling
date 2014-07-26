@@ -12,5 +12,3 @@ end
 group :development do
   gem 'pry-debugger'
 end
-
-gem 'httparty'
