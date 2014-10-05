@@ -12,3 +12,6 @@ end
 group :development do
   gem 'pry-debugger'
 end
+
+gem "faraday", "~> 0.9.0"
+gem "faraday_middleware", "~> 0.9.1"
