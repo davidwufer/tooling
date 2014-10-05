@@ -12,11 +12,18 @@ module Tooling
     end
 
     def request(params = {})
-      sobject = params.delete('sobject')
+      sobject = params.delete(:sobject)
 
       url = [BASE_URL, sobject, 'describe'].join("/")
 
-      faraday.get(url, params)
+      # url += " -H 'Authorization: Bearer #{params[:session_id]}' "
+      # faraday.get(url, params)
+
+      faraday.get do |req|
+        req.url url
+        req.headers['-H'] = "Authorization: Bearer #{params[:session_id]}"
+        req.headers['Content-Type'] = 'application/json'
+      end
     end
   end
 end

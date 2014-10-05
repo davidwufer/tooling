@@ -1,5 +1,6 @@
 require "tooling/version"
 require "tooling/client"
+require "tooling/connection"
 
 module Tooling
   def self.configure(&block)

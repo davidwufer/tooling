@@ -32,8 +32,8 @@ module Tooling
     #   @configuration ||= Configuration.new
     # end
 
-    def request
-      connection.request
+    def request(params = {})
+      connection.request(params.merge(session_id: session_id))
     end
 
 
