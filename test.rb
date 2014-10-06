@@ -1,5 +1,7 @@
 require 'tooling'
 
-client = Tooling::Client.new(session_id: "00Do0000000Kcya!ARAAQDTeloOcdNgVg_mMEQCkebqgAdBldWtWjBlU8M5TvdV6CkLb.ptuMIWywqWeS0mLjgRoJF58JwxgM6jCGUT8C2r1f8oI")
+client = Tooling::Client.new(session_id: "00Do0000000Kcya!ARAAQG5Q9Q_328izVO93gZx8Xqoy7AYXd_ocAO5xkaKgUxs0Fir_cAwp8r9Mj2kQS2BuVCwheKwmdTo5WwUupdlo.ZzBLoEn")
 
-client.request(sobject: 'RecordType')
+response = client.request(sobject: 'RecordType')
+
+puts response.body
