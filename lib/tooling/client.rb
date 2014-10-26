@@ -1,26 +1,31 @@
+require 'json'
+require 'forwardable'
+
 module Tooling
   class Client
+    extend Forwardable
+    def_delegators :connection, :describe, :describe_deep
+
     # attr_reader :config
     attr_reader :connection
 
     # TODO: move these elsewhere
     attr_reader :session_id
     attr_reader :api_version
-    # Currently unused
-    attr_reader :instance
 
     # Tooling::Client.configure do |c|
     #   c.session_id = 'blahblah'
     # end
 
+    # TODO: Refactor
     def initialize(args = {})
       @internal_params = {}
       @api_version = args[:api_version] || 32.0
-      @connection = args[:connection] || Connection.new
 
       session_id = args[:session_id]
       if session_id
-        @internal_params[:session_id] = session_id
+        access_token = session_id
+        instance_url = nil
       else
         client_id = args[:client_id]
         client_secret = args[:client_secret]
@@ -29,7 +34,7 @@ module Tooling
         security_token = args[:security_token]
         if client_id && client_secret && username && password
           oauth_login = "https://login.salesforce.com/services/oauth2/token"
-          result = connection.faraday.post do |req|
+          result = Faraday.new.post do |req|
             req.url oauth_login,
             # req.headers['Content-Type'] = 'application/x-www-form-urlencoded'
             req.body = {
@@ -41,14 +46,15 @@ module Tooling
             }
           end
 
-          # Uhhh, fix this
-          require 'json'
-          access_token = JSON.parse(result.body)["access_token"]
+          # puts JSON.pretty_generate(JSON.parse(result.body))
 
-          @internal_params[:session_id] = access_token
-          # puts result.body
+          json_hash = JSON.parse(result.body)
+          instance_url = json_hash["instance_url"]
+          access_token = json_hash["access_token"]
         end
       end
+
+      @connection = args[:connection] || Connection.new(api_version: api_version, instance_url: instance_url, access_token: access_token)
 
       # Forget about configs for now
       # @config = args[:config] || configuration
@@ -62,11 +68,8 @@ module Tooling
     #   @configuration ||= Configuration.new
     # end
 
-    def request(params = {})
-      puts @internal_params
-      connection.request(params.merge(@internal_params))
-    end
-
-
+    # def describe(sobject)
+    #   connection.describe(sobject)
+    # end
   end
 end
