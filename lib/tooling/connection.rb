@@ -11,6 +11,15 @@ module Tooling
       @base_tooling_url = create_base_tooling_url(args)
     end
 
+    # Pretty cool stuff
+    # def sobjects
+    #   body = request('sobjects')
+    # end
+
+    # def query(query_string)
+    #
+    # end
+
     def get(sobject, id)
       extension_url = ['sobjects', sobject, id].join('/')
       request(extension_url)
