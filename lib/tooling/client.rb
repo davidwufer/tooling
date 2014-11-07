@@ -4,7 +4,7 @@ require 'forwardable'
 module Tooling
   class Client
     extend Forwardable
-    def_delegators :connection, :describe, :describe_deep
+    def_delegators :connection, :describe, :describe_deep, :query
 
     # attr_reader :config
     attr_reader :connection

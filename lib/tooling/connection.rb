@@ -16,9 +16,10 @@ module Tooling
     #   body = request('sobjects')
     # end
 
-    # def query(query_string)
-    #
-    # end
+    def query(query_string)
+      extension_url = ['query']
+      request(extension_url, 'q' => query_string)
+    end
 
     def get(sobject, id)
       extension_url = ['sobjects', sobject, id].join('/')
@@ -35,12 +36,13 @@ module Tooling
       request(extension_url)
     end
 
-    def request(extension_url)
+    def request(extension_url, params = {})
       full_url = [@base_tooling_url, extension_url].join('/')
 
       faraday.get do |req|
         req.url full_url
         req.headers['Authorization'] = "Bearer #{@access_token}"
+        req.params.merge!(params)
       end
     end
 
