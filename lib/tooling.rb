@@ -4,18 +4,16 @@ require "tooling/client"
 require_relative "tooling/response"
 require "tooling/connection"
 
-# TODO: Pull this into a separate method
 class Hash
-  # Stolen from http://wynnnetherland.com/journal/what-makes-a-good-api-wrapper
-  # Converts all of the keys to strings, optionally formatting key name
-  def rubyify_keys!
-    keys.each{|k|
+  def underscore_keys!
+    keys.each do |k|
       v = delete(k)
       new_key = k.to_s.gsub(/[A-Z]/, '_\0').downcase
       self[new_key] = v
-      v.rubyify_keys! if v.is_a?(Hash)
+      v.underscore_keys! if v.is_a?(Hash)
       v.each{|p| p.rubyify_keys! if p.is_a?(Hash)} if v.is_a?(Array)
-    }
+    end
+
     self
   end
 end

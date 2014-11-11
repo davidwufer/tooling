@@ -14,7 +14,7 @@ module Tooling
     end
 
     def body
-      JSON.parse(@response.body).rubyify_keys!
+      JSON.parse(@response.body).underscore_keys!
     end
 
   end
