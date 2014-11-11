@@ -1,6 +1,7 @@
 # require "tooling/monkey_patch"
 require "tooling/version"
 require "tooling/client"
+require_relative "tooling/response"
 require "tooling/connection"
 
 # TODO: Pull this into a separate method
@@ -10,7 +11,7 @@ class Hash
   def rubyify_keys!
     keys.each{|k|
       v = delete(k)
-      new_key = k.to_s.underscore
+      new_key = k.to_s.gsub(/[A-Z]/, '_\0').downcase
       self[new_key] = v
       v.rubyify_keys! if v.is_a?(Hash)
       v.each{|p| p.rubyify_keys! if p.is_a?(Hash)} if v.is_a?(Array)
@@ -18,7 +19,6 @@ class Hash
     self
   end
 end
-
 
 module Tooling
   def self.configure(&block)

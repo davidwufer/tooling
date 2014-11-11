@@ -36,17 +36,19 @@ module Tooling
       request(extension_url)
     end
 
-    def request(extension_url, params = {})
-      full_url = [@base_tooling_url, extension_url].join('/')
-
-      faraday.get do |req|
-        req.url full_url
-        req.headers['Authorization'] = "Bearer #{@access_token}"
-        req.params.merge!(params)
-      end
-    end
-
     private
+      def request(extension_url, params = {})
+        full_url = [@base_tooling_url, extension_url].join('/')
+
+        response = faraday.get do |req|
+          req.url full_url
+          req.headers['Authorization'] = "Bearer #{@access_token}"
+          req.params.merge!(params)
+        end
+
+        return Tooling::Response.new(response)
+      end
+
       def create_base_tooling_url(args)
         [
           args[:instance_url] || "https://na1.salesforce.com",
